@@ -121,10 +121,13 @@ class dombuild {
       iframe.setAttribute('id', 'hexo-history-iframe');
       document.body.appendChild(iframe);
     }
-    item =
-      item.slice(0, item.indexOf('<head>') + 6) +
-      '<base href="https://luckyray-fan.github.io/"/>' +
-      item.slice(item.indexOf('<head>') + 6);
+    if (!window.hexoHistoryConfig) {
+      item =
+        item.slice(0, item.indexOf('<head>') + 6) +
+        '<base href="https://luckyray-fan.github.io/"/>' +
+        item.slice(item.indexOf('<head>') + 6);
+    }
+
     iframe.srcdoc = item; //也存在采用异步的加载方式
     return new Promise((resolve, rej) => {
       iframe.onload = function() {
