@@ -1,10 +1,8 @@
 const path = require('path');
 const VueLoaderPlugin = require('vue-loader/lib/plugin');
-// const BundleAnalyzerPlugin = require('webpack-bundle-analyzer').BundleAnalyzerPlugin;
 module.exports = {
   entry: './src/index.js',
-  mode: 'development', //development
-  devtool: 'inline-source-map',
+  mode: 'production',
   output: {
     filename: 'hexo-history-main.js',
     path: path.resolve(__dirname)
@@ -27,7 +25,7 @@ module.exports = {
       },
       {
         test: /\.css$/,
-        use: ['vue-style-loader', 'css-loader']
+        use: ['vue-style-loader', 'css-loader'] //没有分css文件了
       },
       {
         test: /\.(svg|ttf|eot|woff)\??.*$/,
@@ -36,14 +34,7 @@ module.exports = {
     ]
   },
   plugins: [new VueLoaderPlugin()],
-  resolve: {
-    alias: {
-      vue: 'vue/dist/vue.js'
-    }
-  },
-  devServer: {
-    contentBase: '.',
-    hot: true,
-    liveReload: true
+  externals: {
+    vue: 'Vue'
   }
 };

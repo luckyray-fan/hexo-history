@@ -1,0 +1,345 @@
+<!DOCTYPE html>
+<html lang="zh-Hans">
+
+<head>
+  <meta name="generator" content="Hexo 3.9.0">
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+  <meta name="description" content="promise-await-yield 异步三连">
+  <meta name="keywords" content="Javascript">
+  <meta name="author">
+  <meta name="copyright">
+  <title>promise-await-yield 异步三连 | luckyray</title>
+  <link rel="shortcut icon" href="/favicons.ico">
+  <link rel="stylesheet" href="https://luckyray-fan.github.io/css/index.css?version=1.6.1">
+  <link rel="stylesheet"
+    href="https://cdn.jsdelivr.net/npm/font-awesome@latest/css/font-awesome.min.css?version=1.6.1">
+  <link rel="dns-prefetch" href="https://cdn.staticfile.org">
+  <link rel="dns-prefetch" href="https://cdn.bootcss.com">
+  <link rel="dns-prefetch" href="https://creativecommons.org">
+  <script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>
+  <style>
+
+
+  </style>
+  <script>
+    var GLOBAL_CONFIG = {
+      root: '/',
+      algolia: undefined,
+      localSearch: undefined,
+      copy: {
+        success: '复制成功',
+        error: '复制错误',
+        noSupport: '浏览器不支持'
+      }
+    }
+  </script>
+</head>
+
+<body>
+  <div id="test"></div>
+  <i class="fa fa-arrow-right" id="toggle-sidebar" aria-hidden="true"></i>
+  <div id="sidebar">
+    <div class="toggle-sidebar-info text-center"><span data-toggle="切换文章详情">切换站点概览</span>
+      <hr>
+    </div>
+    <div class="sidebar-toc">
+      <div class="sidebar-toc__title">目录</div>
+      <div class="sidebar-toc__progress"><span class="progress-notice">你已经读了</span><span
+          class="progress-num">0</span><span class="progress-percentage">%</span>
+        <div class="sidebar-toc__progress-bar"></div>
+      </div>
+      <div class="sidebar-toc__content">
+        <ol class="toc">
+          <li class="toc-item toc-level-3"><a class="toc-link" href="#历史演变情况"><span class="toc-number">1.</span> <span
+                class="toc-text">历史演变情况</span></a></li>
+          <li class="toc-item toc-level-3"><a class="toc-link" href="#promise"><span class="toc-number">2.</span> <span
+                class="toc-text">promise</span></a>
+            <ol class="toc-child">
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#基础概念"><span class="toc-number">2.1.</span>
+                  <span class="toc-text">基础概念</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#基础使用"><span class="toc-number">2.2.</span>
+                  <span class="toc-text">基础使用</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#then-链"><span class="toc-number">2.3.</span>
+                  <span class="toc-text">then 链</span></a></li>
+              <li class="toc-item toc-level-4"><a class="toc-link" href="#简单-Promise-实现"><span
+                    class="toc-number">2.4.</span> <span class="toc-text">简单 Promise 实现</span></a></li>
+            </ol>
+          </li>
+        </ol>
+      </div>
+    </div>
+    <div class="author-info hide">
+      <div class="author-info__avatar text-center"><img src="https://luckyray-fan.github.io/img/avatar.png"></div>
+      <div class="author-info__name text-center"></div>
+      <div class="author-info__description text-center">只能自己努力找乐子了</div>
+      <hr>
+      <div class="author-info-articles"><a class="author-info-articles__archives article-meta" href="/archives"><span
+            class="pull-left">文章</span><span class="pull-right">23</span></a><a
+          class="author-info-articles__tags article-meta" href="/tags"><span class="pull-left">标签</span><span
+            class="pull-right">8</span></a><a class="author-info-articles__categories article-meta"
+          href="/categories"><span class="pull-left">分类</span><span class="pull-right">6</span></a>
+      </div>
+    </div>
+  </div>
+  <div id="content-outer">
+    <div id="top-container" style="background-image: url(http://img.luckyray.cn/896653.jpg)">
+      <div id="page-header"><span class="pull-left"> <a id="site-name" href="/">luckyray</a></span><i
+          class="fa fa-bars toggle-menu pull-right" aria-hidden="true"></i><span class="pull-right menus"><a
+            class="site-page" href="/">Home</a><a class="site-page" href="/archives">Archives</a><a class="site-page"
+            href="/tags">Tags</a><a class="site-page" href="/categories">Categories</a></span></div>
+      <div id="post-info">
+        <div id="post-title">promise-await-yield 异步三连</div>
+        <div id="post-meta">
+          <time class="post-meta__date"><i class="fa fa-calendar" aria-hidden="true"></i> 2019-10-20
+          </time><span class="post-meta__separator">|</span><i class="fa fa-inbox post-meta__icon"
+            aria-hidden="true"></i><a class="post-meta__categories"
+            href="/categorieshttps://luckyray-fan.github.io/js/">js</a>
+        </div>
+      </div>
+    </div>
+    <div class="layout" id="content-inner">
+      <article id="post">
+        <div class="article-container" id="post-content">
+          <p>JavaScript 中使用异步的情况非常多, 因为 js 采取单线程, 如果某段代码处理时间过长, 后面的代码将一直等待其执行完毕。<br>由此产生的处理方案是, 任务队列与事件循环(event loop),
+            无论是最初的回调函数(并非只用在异步), 还是后面解决 callback hell 而出现的 promise 等, 都是依靠在这个机制上的。</p>
+          <blockquote>
+            <p>主线程遇到异步函数时, 将其扔给异步模块, 继续执行主线程中剩下的部分, 当异步函数满足了执行要求时, 将回调函数放入任务队列中, 主线程完成后, 才会从任务队列中选择任务执行, 而 event loop
+              负责的是不断从任务队列中取代码, 详细请看 - <a href="https://segmentfault.com/a/1190000011198232" target="_blank"
+                rel="noopener">JavaScript 异步、栈、事件循环、任务队列</a></p>
+          </blockquote>
+          <h3 id="历史演变情况"><a href="#历史演变情况" class="headerlink" title="历史演变情况"></a>历史演变情况</h3>
+          <p>易嵌套的 callback <code>-&gt;</code> promise <code>-&gt;</code> 包装 promise 的 generator <code>-&gt;</code>
+            generator 的语法糖 await</p>
+          <h3 id="promise"><a href="#promise" class="headerlink" title="promise"></a>promise</h3>
+          <h4 id="基础概念"><a href="#基础概念" class="headerlink" title="基础概念"></a>基础概念</h4>
+          <blockquote>
+            <p>
+              JS里一个promise可以有以下几种基本状态：<br>1.<code>nothing happened yet</code><br>2.<code>&quot;locked in&quot; to another promise</code><br>3.<code>fulfilled</code><br>4.<code>rejected</code><br>其中{1,2}为<code>pending</code>，{3,4}为<code>settled</code>，{2,3,4}为<code>resolved</code>，{1}为<code>unresolved</code>。详细可以看
+              <a href="https://www.zhihu.com/question/34445479" target="_blank"
+                rel="noopener">Promise的fulfill和resolve</a></p>
+          </blockquote>
+          <p>Promise 对象用于表示一个异步操作的最终完成 (或失败), 及其结果值。Promise 的参数 executor 函数在 Promise 构造函数返回所建 Promise 实例对象前被调用,
+            当异步成功完成并调用 resolve 函数时, 将会将 Promise 的状态 <code>[[PromiseState]]</code> 更改为 fulfilled (chrome 中是 resolved),
+            如果没有调用 resolve 将一直是 pending 状态<br><img src="https://luckyray-fan.github.io/image/Promise-1.png"
+              alt="Promise 状态"><br><strong>结果值</strong> 是 Promise <a
+              href="https://stackoverflow.com/questions/33075262/what-is-an-internal-slot-of-an-object-in-javascript"
+              target="_blank" rel="noopener">内置伪属性 internal slots</a> <code>[[PromiseValue]]</code> (chrome devtool
+            将它暴露出来了), 它将作为参数传入 之后 <code>then</code> 的参数 onFulfilled 或 onRejected 中</p>
+          <h4 id="基础使用"><a href="#基础使用" class="headerlink" title="基础使用"></a>基础使用</h4>
+          <p>下方新构建一个 Promise 的对象, 当执行到 resolve 时, 将 <code>[[PromiseState]]</code> 改为 fulfilled, 当 Promise
+            变成接受状态(fulfilled)时调用 <code>then</code> 中的 onFulfilled。onFulfilled 有一个参数，即接受的最终结果</p>
+          <figure class="highlight javascript">
+            <table>
+              <tr>
+                <td class="gutter">
+                  <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre>
+                </td>
+                <td class="code">
+                  <pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function"><span class="keyword">function</span>(<span class="params">resolve, reject</span>)</span>&#123;</span><br><span class="line">    setTimeout(<span class="function"><span class="keyword">function</span>(<span class="params"></span>)</span>&#123;</span><br><span class="line">        resolve(<span class="number">123</span>);</span><br><span class="line">    &#125;, <span class="number">50</span>);</span><br><span class="line">&#125;);</span><br><span class="line">p.<span class="string">`then`</span>(<span class="function">(<span class="params">data</span>)=&gt;</span><span class="built_in">console</span>.log(data))</span><br><span class="line"><span class="built_in">console</span>.log(p)</span><br></pre>
+                </td>
+              </tr>
+            </table>
+          </figure>
+
+          <h4 id="then-链"><a href="#then-链" class="headerlink" title="then 链"></a><code>then</code> 链</h4>
+          <p>每次调用 <code>then</code> 后都会返回一个 promise 对象, 返回的情况由 <code>then</code> 中的回调决定, 描述一些常用的情况</p>
+          <ol>
+            <li>返回了一个值, 那么 <code>then</code> 返回的 Promise 将会是 fulfilled 并且将返回的值作为下一个 <code>then</code> 的 onFulfilled 的参数
+            </li>
+            <li>返回一个未定状态(pending)的 Promise，那么 <code>then</code> 返回 Promise 的状态也是未定的, 并且状态与该 Promise 保持一致, 并依据该 Promise
+              中的 resolve 和 reject 来使用下一个 <code>then</code> 的两个参数<blockquote>
+                <p>详细情况请看 <a
+                    href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise/then"
+                    target="_blank" rel="noopener">Promise.prototype.then()</a></p>
+              </blockquote>
+              <figure class="highlight javascript">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">var</span> p = <span class="keyword">new</span> <span class="built_in">Promise</span>(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">  setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> &#123;</span><br><span class="line">    resolve(<span class="number">123</span>)</span><br><span class="line">  &#125;, <span class="number">1000</span>)</span><br><span class="line">&#125;)</span><br><span class="line">p.then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="string">'456'</span></span><br><span class="line">&#125;).then(<span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">  <span class="built_in">console</span>.log(res) <span class="comment">//打印 456</span></span><br><span class="line">&#125;)</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+
+            </li>
+          </ol>
+          <h4 id="简单-Promise-实现"><a href="#简单-Promise-实现" class="headerlink" title="简单 Promise 实现"></a>简单 Promise 实现
+          </h4>
+          <p>当然这都是口头上的执行流程, 现在来写一个看看</p>
+          <ol>
+            <li>
+              <p>结构</p>
+              <figure class="highlight javascript">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">promise</span></span>&#123;</span><br><span class="line">  <span class="keyword">constructor</span>()&#123;&#125;</span><br><span class="line">  then()&#123;&#125;</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </li>
+            <li>
+              <p>构造函数</p>
+              <blockquote>
+                <p>!!!! 如果不将 then 中的 onFulfilled 函数使用setTimeout 推迟到下个事件循环再执行, 执行顺序会与原生Promise不同</p>
+              </blockquote>
+              <figure class="highlight javascript">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line"><span class="keyword">constructor</span>(executor)&#123;</span><br><span class="line">  <span class="comment">//初始状态</span></span><br><span class="line">  <span class="keyword">this</span>._states = <span class="string">'pending'</span>;</span><br><span class="line">  <span class="keyword">this</span>._internalValue = <span class="literal">undefined</span>;</span><br><span class="line">  <span class="comment">// 添加回调函数队列</span></span><br><span class="line">  <span class="keyword">this</span>._chain = []</span><br><span class="line">  <span class="keyword">const</span> resolve = <span class="function">(<span class="params">res</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>._states = <span class="string">'fulfilled'</span>;</span><br><span class="line">    <span class="keyword">this</span>._internalValue = res;</span><br><span class="line">    <span class="comment">//如果此时已经有 then 被调用了</span></span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> &#123;onFulfilled&#125; <span class="keyword">of</span> <span class="keyword">this</span>._chain)&#123;</span><br><span class="line">      <span class="comment">//对象结构赋值, chain 中元素都是对象</span></span><br><span class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> onFulfilled(res), <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  <span class="keyword">const</span> reject = <span class="function">(<span class="params">err</span>)=&gt;</span>&#123;</span><br><span class="line">    <span class="keyword">this</span>._states = <span class="string">'rejected'</span>;</span><br><span class="line">    <span class="keyword">this</span>._internalValue = err;</span><br><span class="line">    <span class="keyword">for</span>(<span class="keyword">var</span> &#123;onRejected&#125; <span class="keyword">of</span> <span class="keyword">this</span>._chain)&#123;</span><br><span class="line">      setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> onRejected(res), <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;</span><br><span class="line">  executor(resolve, reject);</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </li>
+            <li>
+              <p>then 函数编写</p>
+              <blockquote>
+                <p>如果已经 settled 那就执行, 否则加入执行队列</p>
+              </blockquote>
+              <figure class="highlight javascript">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">then(onFulfilled, onRejected) &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._states === <span class="string">'fulfilled'</span>) &#123;</span><br><span class="line">        onFulfilled(<span class="keyword">this</span>._internalValue)</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>._state === <span class="string">'rejected'</span>) &#123;</span><br><span class="line">        onRejected(<span class="keyword">this</span>._internalValue)</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">        <span class="keyword">this</span>._chain.push(&#123; onFulfilled, onRejected &#125;)</span><br><span class="line">    &#125;</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+            </li>
+            <li>
+              <p>Promise 调用链</p>
+              <blockquote>
+                <p><code>then()</code> 应该返回一个新 Promise</p>
+              </blockquote>
+              <figure class="highlight javascript">
+                <table>
+                  <tr>
+                    <td class="gutter">
+                      <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre>
+                    </td>
+                    <td class="code">
+                      <pre><span class="line">then(onFulfilled, onRejected) &#123;</span><br><span class="line">  <span class="keyword">var</span> self = <span class="keyword">this</span></span><br><span class="line">  <span class="keyword">return</span> <span class="keyword">new</span> promise(<span class="function">(<span class="params">resolve, reject</span>) =&gt;</span> &#123;</span><br><span class="line">    <span class="comment">// 确保在 onFulfilled() 和 onRejected() 的错误将导致返回的 promise 失败（reject)</span></span><br><span class="line">    <span class="keyword">const</span> _onFulfilled = <span class="function">(<span class="params">res</span>) =&gt;</span> &#123;</span><br><span class="line">        resolve(onFulfilled(res));</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="keyword">const</span> _onRejected = <span class="function">(<span class="params">err</span>) =&gt;</span> &#123;</span><br><span class="line">      reject(onRejected(err));</span><br><span class="line">    &#125;;</span><br><span class="line">    <span class="built_in">console</span>.log(self === <span class="keyword">this</span>) <span class="comment">//。。。。</span></span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._state === <span class="string">'fulfilled'</span>) &#123;</span><br><span class="line">      _onFulfilled(<span class="keyword">this</span>._internalValue);</span><br><span class="line">    &#125; <span class="keyword">else</span> <span class="keyword">if</span> (<span class="keyword">this</span>._state === <span class="string">'rejected'</span>) &#123;</span><br><span class="line">      _onRejected(<span class="keyword">this</span>._internalValue);</span><br><span class="line">    &#125; <span class="keyword">else</span> &#123;</span><br><span class="line">      <span class="keyword">this</span>._chian.push(&#123; <span class="attr">onFulfilled</span>: _onFulfilled, <span class="attr">onRejected</span>: _onRejected &#125;);</span><br><span class="line">    &#125;</span><br><span class="line">  &#125;);</span><br><span class="line">&#125;</span><br></pre>
+                    </td>
+                  </tr>
+                </table>
+              </figure>
+
+            </li>
+          </ol>
+          <blockquote>
+            <p><code>onFulfilled()</code> 返回 Promise 的话</p>
+          </blockquote>
+          <figure class="highlight javascript">
+            <table>
+              <tr>
+                <td class="gutter">
+                  <pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre>
+                </td>
+                <td class="code">
+                  <pre><span class="line"><span class="keyword">const</span> resolve = <span class="function"><span class="params">res</span> =&gt;</span> &#123;</span><br><span class="line">    <span class="keyword">if</span> (<span class="keyword">this</span>._state !== <span class="string">'pending'</span>) &#123;</span><br><span class="line">          <span class="keyword">return</span></span><br><span class="line">      &#125;</span><br><span class="line">    <span class="comment">// 如果 res 是 thenable（带有then方法的对象, 如 Promise）</span></span><br><span class="line">    <span class="comment">// 必须判断 res 不是null 或 undefined 否则跳到 reject 去处理了</span></span><br><span class="line">    <span class="keyword">if</span> (res&amp;&amp;<span class="keyword">typeof</span> res.then === <span class="string">'function'</span>) &#123;</span><br><span class="line">        <span class="keyword">return</span> res.then(resolve, reject)</span><br><span class="line">    &#125;</span><br><span class="line"></span><br><span class="line">    <span class="keyword">this</span>._state = <span class="string">'fulfilled'</span></span><br><span class="line">    <span class="keyword">this</span>._internalValue = res</span><br><span class="line">    <span class="keyword">for</span> (<span class="keyword">const</span> &#123; onFulfilled &#125; <span class="keyword">of</span> <span class="keyword">this</span>._chain) &#123;</span><br><span class="line">        setTimeout(<span class="function"><span class="params">()</span> =&gt;</span> onFulfilled(res), <span class="number">0</span>);</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> res</span><br><span class="line">&#125;</span><br></pre>
+                </td>
+              </tr>
+            </table>
+          </figure>
+
+          <blockquote>
+            <p>!!!! 建议写一段代码, 在脑海中运行一遍, debug 也可以, 实在不行纸上写一遍流程(最佳方案), 这玩意调用来调用去, 脑袋都绕晕了, 可以在下方看看测试对比, 输出可以点击网站左下角的
+              console 按钮看到</p>
+          </blockquote>
+          <!-- <iframe height="265" style="width: 100%;" scrolling="no" title="Promise 实现"
+            src="https://codepen.io/luckyray-fan/embed/vYYZRzN?height=265&theme-id=dark&default-tab=js,result"
+            frameborder="no" allowtransparency="true" allowfullscreen="true">
+            See the Pen <a href="https://codepen.io/luckyray-fan/pen/vYYZRzN" target="_blank" rel="noopener">Promise
+              实现</a> by 吉光
+            (<a href="https://codepen.io/luckyray-fan" target="_blank" rel="noopener">@luckyray-fan</a>) on <a
+              href="https://codepen.io" target="_blank" rel="noopener">CodePen</a>.
+          </iframe> -->
+          ### generator (可能搭在await里)
+          ### await (待写-水平还要再高点, Promise 就够吃力了, 肯定会补的)
+
+          <p><strong>参考文章</strong>:<br><a
+              href="https://thecodebarbarian.com/write-your-own-node-js-promise-library-from-scratch.html"
+              target="_blank" rel="noopener">Write Your Own Node.js Promise Library from Scratch</a></p>
+          <blockquote>
+            <ul>
+              <li>对应中文版 <a href="https://zhuanlan.zhihu.com/p/35697919" target="_blank" rel="noopener">从零开始写一个 Promise
+                  库</a></li>
+              <li>实现进阶版 <a href="https://zhuanlan.zhihu.com/p/21834559" target="_blank" rel="noopener">史上最易读懂的
+                  Promise/A+ 完全实现</a></li>
+            </ul>
+          </blockquote>
+          <p><a href="https://developer.mozilla.org/zh-CN/docs/Web/JavaScript/Reference/Global_Objects/Promise"
+              target="_blank" rel="noopener">Promise</a></p>
+        </div>
+      </article>
+  <script src="./hexo-history-main.js"></script>
+
+      <div class="post-copyright">
+        <div class="post-copyright__author"><span class="post-copyright-meta">文章作者: </span><span
+            class="post-copyright-info"><a href="mailto:undefined"></a></span></div>
+        <div class="post-copyright__type"><span class="post-copyright-meta">文章链接: </span><span
+            class="post-copyright-info"><a
+              href="https://luckyray-fan.github.io/2019/10/20/promise-await-yield/">https://luckyray-fan.github.io/2019/10/20/promise-await-yield/</a></span>
+        </div>
+        <div class="post-copyright__notice"><span class="post-copyright-meta">版权声明: </span><span
+            class="post-copyright-info">本博客所有文章除特别声明外，均采用 <a
+              href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> 许可协议。转载请注明来自 <a
+              href="https://luckyray-fan.github.io">luckyray</a>！</span></div>
+      </div>
+      <div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/Javascript/">Javascript</a>
+      </div>
+      <nav id="pagination">
+        <div class="prev-post pull-left"><a href="/2019/10/27/文件上传与小应用/"><i class="fa fa-chevron-left">
+            </i><span>文件上传与小应用</span></a></div>
+        <div class="next-post pull-right"><a href="/2019/10/11/software-development-mode/"><span>软件开发 设计模式</span><i
+              class="fa fa-chevron-right"></i></a></div>
+      </nav>
+    </div>
+  </div>
+  <footer class="footer-bg" style="background-image: url(http://img.luckyray.cn/896653.jpg)">
+    <div class="layout" id="footer">
+      <div class="copyright">&copy;2019 - 2020 By null</div>
+      <div class="framework-info"><span>驱动 - </span><a href="#"><span>Hexo</span></a><span
+          class="footer-separator">|</span><span>主题 - </span><a href="#"><span>diary</span></a></div>
+    </div>
+  </footer><i class="fa fa-arrow-up" id="go-up" aria-hidden="true"></i>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@latest/anime.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jquery@latest/dist/jquery.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@fancyapps/fancybox@latest/dist/jquery.fancybox.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/velocity-animate@latest/velocity.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/velocity-ui-pack@latest/velocity.ui.min.js"></script>
+  <script src="https://luckyray-fan.github.io/js/utils.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/fancybox.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/sidebar.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/copy.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/fireworks.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/transition.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/scroll.js?version=1.6.1"></script>
+  <script src="https://luckyray-fan.github.io/js/head.js?version=1.6.1"></script>
+  <script>
+    if (/Android|webOS|iPhone|iPod|BlackBerry/i.test(navigator.userAgent)) {
+      $('#nav').addClass('is-mobile')
+      $('footer').addClass('is-mobile')
+    }
+  </script>
+</body>
+
+</html>

@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+  </head>
+  <body>
+    <script src="./jognDiff.js"></script>
+    <script src="./heckelDiff.js"></script>
+    <script>
+      var a = '开发流程: 开发打包好, 复制到博客下面, hexo g 运行, 观察结果, hexo';
+      var b = '开发打包, 复制到博客下面, 同偶,hexo g 运行, 观察结果, 开发流程: hexo 观察结果';
+      var c = diffString(a, b);
+      document.body.innerHTML = c;
+      console.log(diffWords(a, b));
+    </script>
+  </body>
+</html>
