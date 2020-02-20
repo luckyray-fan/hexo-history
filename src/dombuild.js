@@ -1,14 +1,8 @@
 const parser = require('./parser');
 import { diff, diffPage } from './diff';
 const ratio = 0.8;
-var anchorClass = 'article-container';
-if (window.hexoHistoryConfig) {
-  let themeToClass = {
-    melody: 'article-container',
-    next: 'post-body'
-  };
-  anchorClass = themeToClass[window.hexoHistoryConfig.theme];
-}
+import infoProvider from './info-provider.js';
+var anchorClass = infoProvider.anchorClass;
 const classes = {
   add: 'add',
   del: 'del',
@@ -121,10 +115,10 @@ class dombuild {
       iframe.setAttribute('id', 'hexo-history-iframe');
       document.body.appendChild(iframe);
     }
-    if (!window.hexoHistoryConfig) {
+    if (infoProvider.baseUrl) {
       item =
         item.slice(0, item.indexOf('<head>') + 6) +
-        '<base href="https://luckyray-fan.github.io/"/>' +
+        infoProvider.baseUrl +
         item.slice(item.indexOf('<head>') + 6);
     }
 

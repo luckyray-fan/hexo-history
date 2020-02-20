@@ -1,9 +1,5 @@
-import gitInfo from './git-provider';
+import gitInfo from './info-provider';
 var { repo, sha, path, token } = gitInfo;
-if (window.hexoHistoryConfig) {
-  ({ repo, sha, token } = window.hexoHistoryConfig.gitInfo);
-  path = location.pathname;
-}
 import { Base64, dateContract } from './util/index.js';
 //由提交中的信息获取内容
 function getFetch(url) {

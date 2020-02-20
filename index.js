@@ -1,6 +1,6 @@
 const fs = require('hexo-fs');
 
-var config = hexo.config.history || {};
+var config = hexo.config.hexoHistory || {};
 function buildGenerator(sourcePath, distPath) {
   return {
     data: () => fs.createReadStream(sourcePath),
@@ -19,9 +19,11 @@ hexo.extend.generator.register('hexo-history-file', () => {
 });
 //添加上script标签
 hexo.extend.filter.register('after_render:html', (htmlContent) => {
-  const scriptToInject = `HexoHistory(${JSON.stringify(config)});`; //把配置注册为全局变量好了
+  const scriptToInject = `<script>window.hexoHistoryConfig = JSON.parse(${JSON.stringify(
+    config
+  )});</script> `; //把配置注册为全局变量好了
   let vueInject = `<script src="https://cdn.bootcss.com/vue/2.6.10/vue.min.js"></script>`;
-  const contentToInject = `${vueInject}<script src="/hexo-history-main.js"></script><script>${scriptToInject}</script>`;
+  const contentToInject = `${vueInject} ${scriptToInject}<script src="/hexo-history-main.js"></script>`;
   let newHtmlContent = htmlContent;
   if (/([\n\r\s\t]*<\/body>)/i.test(htmlContent)) {
     const lastIndex = htmlContent.lastIndexOf('</body>');

@@ -132,7 +132,7 @@ export default {
     });
     //存储
     saveInfo.skeleton = new skeletonTem().$mount().$el;
-    saveInfo.origin = this.dom.children[0]; // element.children 是 live 的
+    saveInfo.origin = this.dom; // element.children 是 live 的
     saveInfo.infoAlert = new infoAlert().$mount().$el;
 
     this.domCompare = new dombuild();

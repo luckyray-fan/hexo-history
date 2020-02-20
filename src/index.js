@@ -2,16 +2,14 @@
 import app from './index.vue';
 Vue.config.productionTip = false; //防止生成生产提示
 import 'iview/dist/styles/iview.css';
+import infoProvider from './info-provider.js';
 
 window.HexoHistory = (function() {
   Vue.component('app', app);
-  function start(config) {
-    if (config) {
-      let configJson = JSON.parse(config);
-      window.hexoHistoryConfig = configJson;
-    }
-
-    setTimeout(initPlugin, 1500); //和文档一块加载出来, TODO 加载动画
+  function start() {
+    document.addEventListener('DOMContentLoaded', function() {
+      setTimeout(initPlugin, 1000); //和文档一块加载出来, TODO 加载动画
+    });
   }
   // 将html格式字符串转化为dom的函数
   function htmlStrToDom(htmlstr, parentdata) {
@@ -27,7 +25,7 @@ window.HexoHistory = (function() {
   }
   function initPlugin() {
     var vue = new Vue({
-      el: '#post',
+      el: '.' + infoProvider.anchorClass,
       data: {
         dom: ''
       },

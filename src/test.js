@@ -88,4 +88,7 @@ console.dir(c);
  *  - bug fix
  *    - 请求没有按照顺序返回
  *  - 兼容next主题
+ *  - **换主题的解决方案**
+ *  - 挂载点问题解决
+ *  - style icon bug 解决
  */
