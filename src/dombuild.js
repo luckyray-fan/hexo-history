@@ -25,7 +25,7 @@ class dombuild {
     arr = typeof arr === 'string' ? [arr] : arr;
     arr.forEach((i) => {
       let tem = parser(i);
-      window.tem = tem;
+      // window.tem = tem;
       tem = this.findNode(tem, anchorClass);
       tem = tem.filter(
         (i) => i !== ' ' //去除无意义文本节点

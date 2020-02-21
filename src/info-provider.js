@@ -12,9 +12,9 @@ let themeToClass = {
   melody: 'article-container',
   next: 'post-body'
 };
-Info.path = location.pathname;
 if (window.hexoHistoryConfig) {
-  ({ repo: gitInfo.repo, token: gitInfo.token } = window.hexoHistoryConfig.gitInfo);
+  Info.path = location.pathname;
+  ({ repo: Info.repo, token: Info.token } = window.hexoHistoryConfig);
   if (window.hexoHistoryConfig.theme) {
     Info.anchorClass = themeToClass[window.hexoHistoryConfig.theme.toLowerCase()];
   }

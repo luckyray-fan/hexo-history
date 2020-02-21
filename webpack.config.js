@@ -31,7 +31,14 @@ module.exports = {
       },
       {
         test: /\.(svg|ttf|eot|woff)\??.*$/,
-        loader: 'file-loader'
+        use: [
+          {
+            options: {
+              name: '/[name].[ext]' //没必要上hash
+            },
+            loader: 'file-loader'
+          }
+        ]
       }
     ]
   },

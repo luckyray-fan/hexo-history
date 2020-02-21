@@ -40,7 +40,7 @@ import {
   Badge
 } from "iview";
 import skeleton from "./components/skeleton.vue";
-// import Vue from "vue";
+import Vue from "vue";
 
 Vue.component("skeleton", skeleton);
 Vue.component("Alert", Alert);
@@ -63,7 +63,7 @@ export default {
   },
   methods: {
     async render(name) {
-      if (this.cur === name) {
+      if (this.cur === name || name === undefined) {
         return;
       }
       if (name === "addCommit") {
@@ -81,28 +81,29 @@ export default {
         temNode = await this.domCompare.getDomFragment(
           this.items[+this.cur].content
         );
-        temNode = document.importNode(temNode, true); //dom 上事件的复制等等
+        temNode = document.importNode(temNode, true).children; //dom 上事件的复制等等
       }
-      this.dom.innerHTML = "";
-      this.dom.append(saveInfo.infoAlert);
-      this.dom.append(temNode);
-      // for (let i = 0; i < newNode.children.length; i++) {
-      //   this.dom.append(newNode.children[i]);
-      // }
-      // this.domCompare.getFragment(+name + 1); //把它换成整数, 防止传入字符串
+      removeChildren(this.dom);
+      if (name !== 0) {
+        this.dom.append(saveInfo.infoAlert);
+      }
+      for (let i = 0; i < temNode.length; i++) {
+        this.dom.append(temNode[i]);
+      }
     }
   },
   async mounted() {
     if (window.hexoHistoryConfig) {
       let pos = window.hexoHistoryConfig.pos;
-      if(!pos) return;
-      let style = this.$el.style;
-      ({
-        left: style.left,
-        right: style.right,
-        top: style.top,
-        bottom: style.bottom
-      } = pos);
+      if (pos) {
+        let style = this.$el.style;
+        ({
+          left: style.left,
+          right: style.right,
+          top: style.top,
+          bottom: style.bottom
+        } = pos);
+      }
     }
     this.items = await getCommits();
     this.complete = true; //防止连续点多次继续加载
@@ -132,7 +133,7 @@ export default {
     });
     //存储
     saveInfo.skeleton = new skeletonTem().$mount().$el;
-    saveInfo.origin = this.dom; // element.children 是 live 的
+    saveInfo.origin = cloneDeep(this.dom); // element.children 是 live 的
     saveInfo.infoAlert = new infoAlert().$mount().$el;
 
     this.domCompare = new dombuild();
@@ -140,7 +141,7 @@ export default {
       this.dom.innerHTML,
       ...this.items.map(i => i.content)
     ]);
-    window.test = this.domCompare.astArr[0];
+    // window.test = this.domCompare.astArr[0];
   },
   data() {
     return {
@@ -155,6 +156,20 @@ export default {
   },
   props: ["dom"]
 };
+function removeChildren(node) {
+  let child = node.lastElementChild;
+  while (child) {
+    node.removeChild(child);
+    child = node.lastElementChild;
+  }
+}
+function cloneDeep(node) {
+  let frag = [];
+  for (let i = 0; i < node.children.length; i++) {
+    frag.push(node.children[i]);
+  }
+  return frag;
+}
 </script>
 <style scoped>
 .ivu-select-dropdown ul {

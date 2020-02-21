@@ -1,4 +1,4 @@
-// import Vue from 'vue';
+import Vue from 'vue';
 import app from './index.vue';
 Vue.config.productionTip = false; //防止生成生产提示
 import 'iview/dist/styles/iview.css';
