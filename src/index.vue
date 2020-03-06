@@ -81,7 +81,7 @@ export default {
         temNode = await this.domCompare.getDomFragment(
           this.items[+this.cur].content
         );
-        temNode = document.importNode(temNode, true).children; //dom 上事件的复制等等
+        temNode = temNode.children; //dom 上事件的复制等等
       }
       removeChildren(this.dom);
       if (name !== 0) {

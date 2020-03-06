@@ -3,7 +3,7 @@
 var Info = {
   repo: 'luckyray-fan/luckyray-fan.github.io', //用户名+仓库名
   sha: 'master',
-  path: '2019/10/20/promise-await-yield/',
+  path: '2020/02/02/nodejs-app-picpick/',
   token: '1d5107f3e8a6dd270b60bb70ffce79485b387e53', //提升每小时访问github api 的limit
   anchorClass: 'article-container',
   baseUrl: '<base href="https://luckyray-fan.github.io/"/>'

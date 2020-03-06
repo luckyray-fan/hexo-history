@@ -1,3 +1,6 @@
+- 刚测试了一下, 本来打算用 iframe 加载能够把事件也附带上, 但似乎没有用
+- 如果有侧边栏的话, 会和文章内容不匹配
+
 # hexo-history
 
 文章历史对比, 显示每次更新差异的一个 hexo 插件, 关于如何开发的详细文章可见 [hexo history 插件开发](https://luckyray-fan.github.io/2020/02/19/hexo-history/)
